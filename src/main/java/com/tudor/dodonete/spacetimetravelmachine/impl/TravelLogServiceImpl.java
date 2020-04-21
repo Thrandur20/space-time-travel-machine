@@ -50,15 +50,11 @@ public class TravelLogServiceImpl implements TravelLogService {
             throw new ResourceNotFoundException("Was not able to find a person with the given pgi: " +
                     travelLogDTO.getPgi());
         }
-        try {
-            travelLog.setTravelDate(travelLogDTO.getTravelDate());
-            travelLog.setTravelLocation(travelLogDTO.getTravelLocation());
-            travelLog.setPerson(foundPerson.get());
-            travelLogRepository.save(travelLog);
-        } catch (ConstraintViolationException | DataIntegrityViolationException e) {
-            throw new CollisionException(
-                    "You are breaking the laws of physics by travelling multiple times at the same destination");
-        }
+
+        travelLog.setTravelDate(travelLogDTO.getTravelDate());
+        travelLog.setTravelLocation(travelLogDTO.getTravelLocation());
+        travelLog.setPerson(foundPerson.get());
+        saveTravelLogWithExceptionCheck(travelLog);
         return travelLog;
     }
 
@@ -74,15 +70,25 @@ public class TravelLogServiceImpl implements TravelLogService {
     @Override
     public TravelLog updateTravelLogInfo(TravelLogDTO travelLogDTO, Long id) {
         TravelLog travelLog = new TravelLog();
+        Optional<Person> foundPerson = personRepository.findOneByPgi(travelLogDTO.getPgi());
         Optional<TravelLog> foundTravelLog = travelLogRepository.findById(id);
-        if (foundTravelLog.isEmpty()) {
+        if (foundTravelLog.isEmpty() || foundPerson.isEmpty()) {
             throw new ResourceNotFoundException("The log you with the id you are looking for does not exist");
         }
         travelLog.setId(id);
         travelLog.setTravelLocation(travelLogDTO.getTravelLocation());
         travelLog.setTravelDate(travelLogDTO.getTravelDate());
-        travelLog.setPerson(foundTravelLog.get().getPerson());
-        travelLogRepository.save(travelLog);
+        travelLog.setPerson(foundPerson.get());
+        saveTravelLogWithExceptionCheck(travelLog);
         return travelLog;
+    }
+
+    private void saveTravelLogWithExceptionCheck(TravelLog travelLog) {
+        try {
+            travelLogRepository.save(travelLog);
+        } catch (ConstraintViolationException | DataIntegrityViolationException e) {
+            throw new CollisionException(
+                    "You are breaking the laws of physics by travelling multiple times at the same destination");
+        }
     }
 }
