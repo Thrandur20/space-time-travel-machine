@@ -11,6 +11,4 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
     Optional<Person> findOneByPgi(String pgi);
 
     boolean existsByPgi(String pgi);
-
-    void deleteByPgi(String pgi);
 }

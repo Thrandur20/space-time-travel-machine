@@ -35,6 +35,7 @@ public class Person implements Serializable {
     @ApiModelProperty(notes = "the Last Name of the galactic resident should have at least 2 characters")
     private String lastName;
 
-    @OneToMany(mappedBy = "person")
+    @JsonIgnore
+    @OneToMany(mappedBy = "person", fetch = FetchType.LAZY)
     private List<TravelLog> travelLogList;
 }

@@ -1,9 +1,8 @@
 package com.tudor.dodonete.spacetimetravelmachine.controller;
 
-import com.tudor.dodonete.spacetimetravelmachine.entity.Person;
+import com.tudor.dodonete.spacetimetravelmachine.dto.TravelLogDTO;
 import com.tudor.dodonete.spacetimetravelmachine.entity.TravelLog;
 import com.tudor.dodonete.spacetimetravelmachine.service.TravelLogService;
-import org.hibernate.EntityMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
@@ -39,11 +38,10 @@ public class TravelLogController {
         return travelLogService.retrieveTravelLogByPerson(pgi);
     }
 
-    @PostMapping("/api/people/{pgi}/travels")
+    @PostMapping("/api/travels")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<TravelLog> createTravelLogForPerson(@PathVariable String pgi,
-                                                              @Valid @RequestBody TravelLog travelLog) {
-        TravelLog savedLog = travelLogService.createTravelLogForPerson(pgi, travelLog);
+    public ResponseEntity<TravelLog> createTravelLog(@Valid @RequestBody TravelLogDTO travelLog) {
+        TravelLog savedLog = travelLogService.createTravelLogForPerson(travelLog);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest().path("/{id}")
                 .buildAndExpand(savedLog.getId())
@@ -55,9 +53,30 @@ public class TravelLogController {
     @GetMapping("/api/people/{pgi}/travels/{id}")
     public EntityModel<TravelLog> retrieveTravelLogFromPersonWithId(@PathVariable String pgi, @PathVariable Long id) {
         TravelLog foundTravel = travelLogService.getTravelDetailsById(id);
-        EntityModel<TravelLog> personEntityModel = EntityModel.of(foundTravel);
+        EntityModel<TravelLog> travelEntityModel = EntityModel.of(foundTravel);
         WebMvcLinkBuilder linkTo = linkTo(methodOn(this.getClass()).retrieveAllLogsByPerson(pgi));
-        personEntityModel.add(linkTo.withRel("all-travel-logs"));
-        return personEntityModel;
+        travelEntityModel.add(linkTo.withRel("all-travel-logs-by-person"));
+        return travelEntityModel;
+    }
+
+    @GetMapping("/api/travels/{id}")
+    public EntityModel<TravelLog> retrieveTravelLogWithId(@PathVariable Long id) {
+        TravelLog foundTravel = travelLogService.getTravelDetailsById(id);
+        EntityModel<TravelLog> travelEntityModel = EntityModel.of(foundTravel);
+        WebMvcLinkBuilder linkTo = linkTo(methodOn(this.getClass()).retrieveAllTravelLogs());
+        travelEntityModel.add(linkTo.withRel("all-travel-logs"));
+        return travelEntityModel;
+    }
+
+    @PutMapping("/api/travels/{id}")
+    public EntityModel<TravelLog> updateTravelLogInformation(@Valid @RequestBody TravelLogDTO travelLog,
+                                                             @PathVariable Long id) {
+
+        TravelLog updatedTravelLog = travelLogService.updateTravelLogInfo(travelLog, id);
+
+        EntityModel<TravelLog> travelEntityModel = EntityModel.of(updatedTravelLog);
+        WebMvcLinkBuilder linkTo = linkTo(methodOn(this.getClass()).retrieveAllTravelLogs());
+        travelEntityModel.add(linkTo.withRel("all-travel-logs"));
+        return travelEntityModel;
     }
 }

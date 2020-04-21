@@ -2,6 +2,7 @@ package com.tudor.dodonete.spacetimetravelmachine.impl;
 
 import com.tudor.dodonete.spacetimetravelmachine.customException.ExceptionResponse;
 import com.tudor.dodonete.spacetimetravelmachine.customException.ResourceNotFoundException;
+import com.tudor.dodonete.spacetimetravelmachine.dto.TravelLogDTO;
 import com.tudor.dodonete.spacetimetravelmachine.entity.Person;
 import com.tudor.dodonete.spacetimetravelmachine.entity.TravelLog;
 import com.tudor.dodonete.spacetimetravelmachine.repository.PersonRepository;
@@ -42,12 +43,17 @@ public class TravelLogServiceImpl implements TravelLogService {
     }
 
     @Override
-    public TravelLog createTravelLogForPerson(String pgi, TravelLog travelLog) {
-        Optional<Person> foundPerson = personRepository.findOneByPgi(pgi);
+    public TravelLog createTravelLogForPerson(TravelLogDTO travelLogDTO) {
+        TravelLog travelLog = new TravelLog();
+        Optional<Person> foundPerson = personRepository.findOneByPgi(travelLogDTO.getPgi());
         if (foundPerson.isEmpty()) {
-            throw new ResourceNotFoundException("Was not able to find a person with the given pgi: " + pgi);
+            throw new ResourceNotFoundException("Was not able to find a person with the given pgi: " +
+                    travelLogDTO.getPgi());
         }
         try {
+            travelLog.setTravelDate(travelLogDTO.getTravelDate());
+            travelLog.setTravelLocation(travelLogDTO.getTravelLocation());
+            travelLog.setPerson(foundPerson.get());
             travelLogRepository.save(travelLog);
         } catch (ConstraintViolationException e) {
             throw new RuntimeException(
@@ -63,5 +69,20 @@ public class TravelLogServiceImpl implements TravelLogService {
             throw new ResourceNotFoundException("The log you with the id you are looking for does not exist");
         }
         return foundLog.get();
+    }
+
+    @Override
+    public TravelLog updateTravelLogInfo(TravelLogDTO travelLogDTO, Long id) {
+        TravelLog travelLog = new TravelLog();
+        Optional<TravelLog> foundTravelLog = travelLogRepository.findById(id);
+        if (foundTravelLog.isEmpty()) {
+            throw new ResourceNotFoundException("The log you with the id you are looking for does not exist");
+        }
+        travelLog.setId(id);
+        travelLog.setTravelLocation(travelLogDTO.getTravelLocation());
+        travelLog.setTravelDate(travelLogDTO.getTravelDate());
+        travelLog.setPerson(foundTravelLog.get().getPerson());
+        travelLogRepository.save(travelLog);
+        return travelLog;
     }
 }
