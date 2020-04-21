@@ -1,6 +1,7 @@
 package com.tudor.dodonete.spacetimetravelmachine.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.tudor.dodonete.spacetimetravelmachine.customValidation.PGIConstraint;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -23,7 +24,7 @@ public class Person implements Serializable {
 
     @Column(length = 10, unique = true)
     @NaturalId
-    @Size(min = 5, max = 10, message = "the Size of the PGI does not correspond with the Galactic Federation Regulations")
+    @PGIConstraint(message = "the PGI entered does not correspond with the Galactic Federation Regulations")
     @ApiModelProperty(notes = "the Size of the PGI does not correspond with the Galactic Federation Regulations")
     private String pgi;
 

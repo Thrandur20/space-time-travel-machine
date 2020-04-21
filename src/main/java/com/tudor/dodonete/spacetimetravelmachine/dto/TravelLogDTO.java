@@ -1,5 +1,6 @@
 package com.tudor.dodonete.spacetimetravelmachine.dto;
 
+import com.tudor.dodonete.spacetimetravelmachine.customValidation.PGIConstraint;
 import lombok.Data;
 import org.springframework.validation.annotation.Validated;
 
@@ -11,7 +12,10 @@ import java.util.Date;
 public class TravelLogDTO {
     @Size(min = 2, message = "There is no planet with a single letter, that would be just sad")
     private String travelLocation;
+
     private Date travelDate;
+
+    @PGIConstraint
     private String pgi;
 
     public TravelLogDTO(String travelLocation, Date travelDate, String pgi) {
