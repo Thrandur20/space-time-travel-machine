@@ -4,6 +4,8 @@ import com.tudor.dodonete.spacetimetravelmachine.customValidation.PGIConstraint;
 import lombok.Data;
 import org.springframework.validation.annotation.Validated;
 
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 import java.util.Date;
 
@@ -13,6 +15,7 @@ public class TravelLogDTO {
     @Size(min = 2, message = "There is no planet with a single letter, that would be just sad")
     private String travelLocation;
 
+    @Temporal(TemporalType.DATE)
     private Date travelDate;
 
     @PGIConstraint

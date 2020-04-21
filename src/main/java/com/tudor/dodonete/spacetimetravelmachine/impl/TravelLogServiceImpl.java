@@ -1,6 +1,6 @@
 package com.tudor.dodonete.spacetimetravelmachine.impl;
 
-import com.tudor.dodonete.spacetimetravelmachine.customException.ExceptionResponse;
+import com.tudor.dodonete.spacetimetravelmachine.customException.CollisionException;
 import com.tudor.dodonete.spacetimetravelmachine.customException.ResourceNotFoundException;
 import com.tudor.dodonete.spacetimetravelmachine.dto.TravelLogDTO;
 import com.tudor.dodonete.spacetimetravelmachine.entity.Person;
@@ -9,10 +9,10 @@ import com.tudor.dodonete.spacetimetravelmachine.repository.PersonRepository;
 import com.tudor.dodonete.spacetimetravelmachine.repository.TravelLogRepository;
 import com.tudor.dodonete.spacetimetravelmachine.service.TravelLogService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintViolationException;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,8 +55,8 @@ public class TravelLogServiceImpl implements TravelLogService {
             travelLog.setTravelLocation(travelLogDTO.getTravelLocation());
             travelLog.setPerson(foundPerson.get());
             travelLogRepository.save(travelLog);
-        } catch (ConstraintViolationException e) {
-            throw new RuntimeException(
+        } catch (ConstraintViolationException | DataIntegrityViolationException e) {
+            throw new CollisionException(
                     "You are breaking the laws of physics by travelling multiple times at the same destination");
         }
         return travelLog;

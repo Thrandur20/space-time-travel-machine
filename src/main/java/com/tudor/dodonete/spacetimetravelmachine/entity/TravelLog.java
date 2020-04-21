@@ -1,6 +1,5 @@
 package com.tudor.dodonete.spacetimetravelmachine.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -26,6 +25,8 @@ public class TravelLog implements Serializable {
     @Size(min = 2, message = "There is no planet with a single letter, that would be just sad")
     @ApiModelProperty(notes = "planet location name should at least be 2 characters long")
     private String travelLocation;
+
+    @Temporal(TemporalType.DATE)
     private Date travelDate;
 
     @ManyToOne
