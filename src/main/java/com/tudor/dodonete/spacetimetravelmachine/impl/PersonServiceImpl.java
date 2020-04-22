@@ -58,7 +58,7 @@ public class PersonServiceImpl implements PersonService {
     public void deletePerson(String pgi) {
         Optional<Person> personToBeDeleted = personRepository.findOneByPgi(pgi);
         if (personToBeDeleted.isEmpty()) {
-            logger.warn("There was no person found with the given PGI");
+            logger.warn("There was no person found with the given {} PGI", pgi);
             throw new ResourceNotFoundException("The PGI for the requested user does not exist");
         }
         List<TravelLog> travelLogsToBeRemoved = travelLogRepository.findAllByPerson(personToBeDeleted.get());
@@ -71,7 +71,7 @@ public class PersonServiceImpl implements PersonService {
     public Person getPersonDetails(String pgi) {
         Optional<Person> foundPerson = personRepository.findOneByPgi(pgi);
         if (foundPerson.isEmpty()) {
-            logger.warn("There was no person found with the given PGI");
+            logger.warn("There was no person found with the given {} PGI", pgi);
             throw new ResourceNotFoundException("No person was found with the following PGI: " + pgi);
         }
         logger.info("Returning person with {} PGI", pgi);
@@ -82,7 +82,7 @@ public class PersonServiceImpl implements PersonService {
     public Person updatePersonDetails(String pgi, Person person) {
         Optional<Person> foundPerson = personRepository.findOneByPgi(pgi);
         if (foundPerson.isEmpty()) {
-            logger.warn("There was no person found with the given PGI");
+            logger.warn("There was no person found with the given {} PGI", pgi);
             throw new ResourceNotFoundException("No person was found with the following PGI: " + pgi);
         }
         person.setPgi(pgi);
