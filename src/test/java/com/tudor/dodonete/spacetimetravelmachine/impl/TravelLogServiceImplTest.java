@@ -23,6 +23,7 @@ import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
@@ -236,6 +237,28 @@ public class TravelLogServiceImplTest {
         //When
         travelLogService.updateTravelLogInfo(travelLogDTO, DEFAULT_ID);
         //Then expected Collision exception to be thrown
+    }
+
+    @Test
+    public void testDeleteTravelLog() {
+        //Given
+        TravelLog travelLog = createDefaultTravelLog();
+        when(travelLogRepository.findById(anyLong())).thenReturn(Optional.of(travelLog));
+        travelLogService = new TravelLogServiceImpl(personRepository, travelLogRepository);
+        //When
+        travelLogService.deleteTravelLog(DEFAULT_ID);
+        //Then
+        verify(travelLogRepository).delete(travelLog);
+    }
+
+    @Test(expected = ResourceNotFoundException.class)
+    public void testDeleteTravelLogButThrowException() {
+        //Given
+        when(travelLogRepository.findById(anyLong())).thenReturn(Optional.empty());
+        travelLogService = new TravelLogServiceImpl(personRepository, travelLogRepository);
+        //When
+        travelLogService.deleteTravelLog(DEFAULT_ID);
+        //Then throw Resource not found exception
     }
 
     private Person createDefaultPerson() {

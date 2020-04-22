@@ -6,8 +6,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class SpaceTimeTravelMachineApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
+    @Test
+    void contextLoads() {
+    }
+
+    @Test
+    public void applicationContextTest() {
+        SpaceTimeTravelMachineApplication.main(new String[]{});
+    }
 
 }

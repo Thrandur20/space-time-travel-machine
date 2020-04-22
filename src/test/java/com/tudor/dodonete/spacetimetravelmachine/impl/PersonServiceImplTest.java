@@ -2,7 +2,9 @@ package com.tudor.dodonete.spacetimetravelmachine.impl;
 
 import com.tudor.dodonete.spacetimetravelmachine.customException.ResourceNotFoundException;
 import com.tudor.dodonete.spacetimetravelmachine.entity.Person;
+import com.tudor.dodonete.spacetimetravelmachine.entity.TravelLog;
 import com.tudor.dodonete.spacetimetravelmachine.repository.PersonRepository;
+import com.tudor.dodonete.spacetimetravelmachine.repository.TravelLogRepository;
 import com.tudor.dodonete.spacetimetravelmachine.utils.PgiGenerator;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,12 +13,10 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -32,6 +32,9 @@ public class PersonServiceImplTest {
 
     @Mock
     private PersonRepository personRepository;
+
+    @Mock
+    private TravelLogRepository travelLogRepository;
 
     @Mock
     private PgiGenerator pgiGenerator;
@@ -94,8 +97,16 @@ public class PersonServiceImplTest {
     public void deletePersonByPgi() {
         //Given
         Person person = createDefaultPerson();
+        TravelLog travelLog = new TravelLog(
+                1L,
+                "TEST",
+                new Date());
+        List<TravelLog> travelLogList = Collections.singletonList(travelLog);
+        person.setTravelLogList(travelLogList);
         when(personRepository.findOneByPgi(anyString())).thenReturn(Optional.of(person));
+        when(travelLogRepository.findAllByPerson(any(Person.class))).thenReturn(person.getTravelLogList());
         personService = new PersonServiceImpl(personRepository);
+        personService.setTravelLogRepository(travelLogRepository);
         //When
         personService.deletePerson(PGI);
         //Then

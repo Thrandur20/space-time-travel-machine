@@ -79,4 +79,10 @@ public class TravelLogController {
         travelEntityModel.add(linkTo.withRel("all-travel-logs"));
         return travelEntityModel;
     }
+
+    @DeleteMapping("/api/travels/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteTravelLog(@PathVariable Long id) {
+        travelLogService.deleteTravelLog(id);
+    }
 }

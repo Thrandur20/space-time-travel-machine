@@ -15,4 +15,6 @@ public interface TravelLogService {
     TravelLog getTravelDetailsById(Long id);
 
     TravelLog updateTravelLogInfo(TravelLogDTO travelLogDTO, Long id);
+
+    void deleteTravelLog(Long id);
 }

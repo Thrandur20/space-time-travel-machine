@@ -81,6 +81,15 @@ public class TravelLogServiceImpl implements TravelLogService {
         return travelLog;
     }
 
+    @Override
+    public void deleteTravelLog(Long id) {
+        Optional<TravelLog> travelLogToBeDeleted = travelLogRepository.findById(id);
+        if (travelLogToBeDeleted.isEmpty()) {
+            throw new ResourceNotFoundException("There is no historic evidence of that travel log");
+        }
+        travelLogRepository.delete(travelLogToBeDeleted.get());
+    }
+
     private void saveTravelLogWithExceptionCheck(TravelLog travelLog) {
         if (travelLogRepository.existsByTravelLocationAndTravelDateAndPerson(
                 travelLog.getTravelLocation(),
