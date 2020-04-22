@@ -26,4 +26,7 @@ public class TravelLogDTO {
         this.travelDate = travelDate;
         this.pgi = pgi;
     }
+
+    public TravelLogDTO() {
+    }
 }

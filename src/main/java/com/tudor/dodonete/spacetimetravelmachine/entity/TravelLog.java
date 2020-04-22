@@ -35,4 +35,16 @@ public class TravelLog implements Serializable {
             referencedColumnName = "pgi"
     )
     private Person person;
+
+    public TravelLog(Long id,
+                     @Size(min = 2, message = "There is no planet with a single letter, that would be just sad")
+                             String travelLocation,
+                     Date travelDate) {
+        this.id = id;
+        this.travelLocation = travelLocation;
+        this.travelDate = travelDate;
+    }
+
+    public TravelLog() {
+    }
 }

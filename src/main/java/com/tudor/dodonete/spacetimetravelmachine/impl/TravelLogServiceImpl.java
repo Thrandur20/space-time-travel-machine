@@ -9,10 +9,8 @@ import com.tudor.dodonete.spacetimetravelmachine.repository.PersonRepository;
 import com.tudor.dodonete.spacetimetravelmachine.repository.TravelLogRepository;
 import com.tudor.dodonete.spacetimetravelmachine.service.TravelLogService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import javax.validation.ConstraintViolationException;
 import java.util.List;
 import java.util.Optional;
 
@@ -84,11 +82,13 @@ public class TravelLogServiceImpl implements TravelLogService {
     }
 
     private void saveTravelLogWithExceptionCheck(TravelLog travelLog) {
-        try {
-            travelLogRepository.save(travelLog);
-        } catch (ConstraintViolationException | DataIntegrityViolationException e) {
+        if (travelLogRepository.existsByTravelLocationAndTravelDateAndPerson(
+                travelLog.getTravelLocation(),
+                travelLog.getTravelDate(),
+                travelLog.getPerson())) {
             throw new CollisionException(
                     "You are breaking the laws of physics by travelling multiple times at the same destination");
         }
+        travelLogRepository.save(travelLog);
     }
 }
