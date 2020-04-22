@@ -39,4 +39,25 @@ public class Person implements Serializable {
     @JsonIgnore
     @OneToMany(mappedBy = "person", fetch = FetchType.LAZY)
     private List<TravelLog> travelLogList;
+
+    public Person() {
+    }
+
+    public Person(@Size(min = 2, message = "the First Name of the galactic resident should have at least 2 characters") String firstName,
+                  @Size(min = 2, message = "the Last Name of the galactic resident should have at least 2 characters") String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
+    public Person(Long id,
+                  @PGIConstraint String pgi,
+                  @Size(min = 2, message = "the First Name of the galactic resident should have at least 2 characters")
+                          String firstName,
+                  @Size(min = 2, message = "the Last Name of the galactic resident should have at least 2 characters")
+                          String lastName) {
+        this.id = id;
+        this.pgi = pgi;
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
 }
