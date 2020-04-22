@@ -2,7 +2,9 @@ package com.tudor.dodonete.spacetimetravelmachine.impl;
 
 import com.tudor.dodonete.spacetimetravelmachine.customException.ResourceNotFoundException;
 import com.tudor.dodonete.spacetimetravelmachine.entity.Person;
+import com.tudor.dodonete.spacetimetravelmachine.entity.TravelLog;
 import com.tudor.dodonete.spacetimetravelmachine.repository.PersonRepository;
+import com.tudor.dodonete.spacetimetravelmachine.repository.TravelLogRepository;
 import com.tudor.dodonete.spacetimetravelmachine.service.PersonService;
 import com.tudor.dodonete.spacetimetravelmachine.utils.PgiGenerator;
 import org.slf4j.Logger;
@@ -17,6 +19,7 @@ import java.util.Optional;
 public class PersonServiceImpl implements PersonService {
 
     PersonRepository personRepository;
+    TravelLogRepository travelLogRepository;
     PgiGenerator pgiGenerator;
     Logger logger = LoggerFactory.getLogger(PersonServiceImpl.class);
 
@@ -28,6 +31,11 @@ public class PersonServiceImpl implements PersonService {
     @Autowired
     public void setPgiGenerator(PgiGenerator pgiGenerator) {
         this.pgiGenerator = pgiGenerator;
+    }
+
+    @Autowired
+    public void setTravelLogRepository(TravelLogRepository travelLogRepository) {
+        this.travelLogRepository = travelLogRepository;
     }
 
     @Override
@@ -53,6 +61,8 @@ public class PersonServiceImpl implements PersonService {
             logger.warn("There was no person found with the given PGI");
             throw new ResourceNotFoundException("The PGI for the requested user does not exist");
         }
+        List<TravelLog> travelLogsToBeRemoved = travelLogRepository.findAllByPerson(personToBeDeleted.get());
+        travelLogRepository.deleteAll(travelLogsToBeRemoved);
         personRepository.delete(personToBeDeleted.get());
         logger.info("Successfully deleted the person with {} PGI", pgi);
     }

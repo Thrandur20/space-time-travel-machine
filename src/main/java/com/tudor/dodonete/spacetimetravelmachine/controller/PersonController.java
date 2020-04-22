@@ -60,7 +60,7 @@ public class PersonController {
     }
 
     @PutMapping(path = "/api/people/{pgi}")
-    public Person editPerson(@PathVariable String pgi, @Valid @RequestBody Person person) {
+    public Person updatePerson(@PathVariable String pgi, @Valid @RequestBody Person person) {
         return personService.updatePersonDetails(pgi, person);
     }
 }
