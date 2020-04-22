@@ -21,7 +21,7 @@ import java.util.function.Predicate;
 public class SwaggerConfig {
     public static final Contact DEFAULT_CONTACT = new Contact(
             "Tudor Dodonete",
-            "https://github.com/Thrandur20/restful-web-services",
+            "https://github.com/Thrandur20/space-time-travel-machine",
             "tudor.dodonete@gmail.com"
     );
 
