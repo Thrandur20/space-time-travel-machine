@@ -11,7 +11,7 @@ import java.util.Date;
 
 @Entity
 @Data
-@ApiModel(value = "Travel Log Details")
+@ApiModel(description = "Travel Log Details")
 @Table(uniqueConstraints = {
         @UniqueConstraint(columnNames = {"pgi", "travelLocation", "travelDate"})
 })
