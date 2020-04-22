@@ -25,7 +25,8 @@ public class Person implements Serializable {
     @Column(length = 10, unique = true)
     @NaturalId
     @PGIConstraint(message = "the PGI entered does not correspond with the Galactic Federation Regulations")
-    @ApiModelProperty(notes = "the Size of the PGI does not correspond with the Galactic Federation Regulations")
+    @ApiModelProperty(notes = "the Size of the PGI should be between 5 and 10 characters starting with a " +
+            "letter in order to correspond with the Galactic Federation Regulations")
     private String pgi;
 
     @Size(min = 2, message = "the First Name of the galactic resident should have at least 2 characters")

@@ -23,10 +23,11 @@ public class TravelLog implements Serializable {
     private Long id;
 
     @Size(min = 2, message = "There is no planet with a single letter, that would be just sad")
-    @ApiModelProperty(notes = "planet location name should at least be 2 characters long")
+    @ApiModelProperty(notes = "Planet location name should at least be 2 characters long")
     private String travelLocation;
 
     @Temporal(TemporalType.DATE)
+    @ApiModelProperty(notes = "The date at which a person has travelled through the Galactic Federation's space field")
     private Date travelDate;
 
     @ManyToOne
